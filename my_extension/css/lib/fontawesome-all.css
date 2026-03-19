@@ -1,0 +1,142 @@
+/* Font Awesome v6 */
+.fa,
+.fas,
+.fa-solid,
+.far,
+.fa-regular,
+.fab,
+.fa-brands {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: var(--fa-display, inline-block);
+  font-family: "Font Awesome 6 Pro";
+  font-style: normal;
+  font-variant: normal;
+  line-height: 1;
+  text-rendering: auto; }
+
+.far {
+  font-weight: 400;
+}
+
+.fas {
+  font-weight: 900;
+}
+
+.fa-shield::before {
+  content: "\f132"; }
+
+.fa-shield-check::before {
+  content: "\f2f7"; }
+
+.fa-shield-exclamation::before {
+  content: "\e247"; }
+
+.fa-shield-halved::before {
+  content: "\f3ed"; }
+
+.fa-shield-xmark::before {
+  content: "\e24c"; }
+
+.fa-shield-slash::before {
+  content: "\e24b"; }
+
+.fa-user-shield::before {
+  content: "\f505"; }
+
+.fa-xmark::before {
+  content: "\f00d"; }
+
+.fa-spinner-third::before {
+  content: "\f3f4"; }
+
+
+/* Brands */
+.fab,
+.fa-brands {
+  font-family: 'Font Awesome 6 Brands';
+  font-weight: 400;
+}
+
+.fa-linkedin:before {
+  content: "\f08c"; }
+
+.fa-linkedin-in:before {
+  content: "\f0e1"; }
+
+.fa-twitter:before {
+  content: "\f099"; }
+
+.fa-twitter-square:before {
+  content: "\f081"; }
+
+.fa-external-link::before {
+  content: "\f08e"; }
+
+.fa-plus::before {
+  content: "\2b"; }
+
+.fa-angle-up::before {
+  content: "\f106"; }
+
+.fa-angle-down::before {
+  content: "\f107"; }
+
+.fa-times::before {
+content: "\f00d"; }
+
+.fa-exclamation-triangle::before {
+  content: "\f071"; }
+
+.fa-question::before {
+  content: "\3f"; }
+
+.fa-browser::before {
+  content: "\f37e"; }
+
+.fa-warning::before {
+  content: "\f071"; }
+
+.fa-check::before {
+  content: "\f00c"; }
+
+.fa-thumbs-down::before {
+  content: "\f165"; }
+
+.fa-thumbs-up::before {
+  content: "\f164"; }
+
+.fa-briefcase::before {
+  content: "\f0b1"; }
+
+.fa-phone::before {
+  content: "\f095"; }
+
+.fa-circle-user::before {
+  content: "\f2bd"; }
+
+.fa-user-lock::before {
+  content: "\f502"; }
+
+.fa-search::before {
+  content: "\f002"; }
+
+/* Animation */
+.fa-spin {
+  -webkit-animation-name: fa-spin;
+          animation-name: fa-spin;
+  -webkit-animation-delay: var(--fa-animation-delay, 0);
+          animation-delay: var(--fa-animation-delay, 0);
+  -webkit-animation-direction: var(--fa-animation-direction, normal);
+          animation-direction: var(--fa-animation-direction, normal);
+  -webkit-animation-duration: var(--fa-animation-duration, 2s);
+          animation-duration: var(--fa-animation-duration, 2s);
+  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+          animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  -webkit-animation-timing-function: var(--fa-animation-timing, linear);
+          animation-timing-function: var(--fa-animation-timing, linear); }
+
+@keyframes fa-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

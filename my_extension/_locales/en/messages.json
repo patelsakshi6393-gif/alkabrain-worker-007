@@ -1,0 +1,383 @@
+{
+   "accept_all": {
+      "message": "Accept all"
+   },
+   "add_a_review": {
+      "message": "Add a review"
+   },
+   "apply_filters": {
+      "message": "Apply filters"
+   },
+   "apr": {
+      "message": "Apr"
+   },
+   "april": {
+      "message": "April"
+   },
+   "are_you_statisfied": {
+      "message": "Are you satisfied with Hunter extension?"
+   },
+   "aug": {
+      "message": "Aug"
+   },
+   "august": {
+      "message": "August"
+   },
+   "clear_filters": {
+      "message": "Clear filters"
+   },
+   "click_to_copy": {
+      "message": "Click to copy"
+   },
+   "connection_refused": {
+      "message": "The connection to Hunter has been refused"
+   },
+   "could_not_find_email_for_person": {
+      "message": "We couldn't find the email address for this person."
+   },
+   "create_a_new_list": {
+      "message": "Create a new list"
+   },
+   "create_free_account": {
+      "message": "Create a free account"
+   },
+   "dashboard": {
+      "message": "Dashboard"
+   },
+   "dec": {
+      "message": "Dec"
+   },
+   "december": {
+      "message": "December"
+   },
+   "department_communication": {
+      "message": "Writing & Communication"
+   },
+   "department_design": {
+      "message": "Arts & Design"
+   },
+   "department_education": {
+      "message": "Education"
+   },
+   "department_executive": {
+      "message": "Executive"
+   },
+   "department_finance": {
+      "message": "Finance"
+   },
+   "department_health": {
+      "message": "Medical & Health"
+   },
+   "department_hr": {
+      "message": "Human Resources"
+   },
+   "department_it": {
+      "message": "IT / Engineering"
+   },
+   "department_legal": {
+      "message": "Legal"
+   },
+   "department_management": {
+      "message": "Management"
+   },
+   "department_marketing": {
+      "message": "Marketing"
+   },
+   "department_operations": {
+      "message": "Operations & Logistics"
+   },
+   "department_sales": {
+      "message": "Sales"
+   },
+   "department_support": {
+      "message": "Support"
+   },
+   "departments": {
+      "message": "Departments"
+   },
+   "domain_used_for_personal_emails": {
+      "message": "This domain is used to create personal email addresses. These email addresses are not returned in Hunter which is designed for professional use only."
+   },
+   "email_finder": {
+      "message": "Email Finder"
+   },
+   "email_pattern": {
+      "message": "Email pattern"
+   },
+   "email_verification_takes_longer": {
+      "message": "The email verification is taking longer than expected. Please try again later."
+   },
+   "enter_full_name_to_find_email": {
+      "message": "Please enter the full name of the person to find the email address."
+   },
+   "extension_description": {
+      "message": "Find email addresses from anywhere on the web, with just one click."
+   },
+   "extension_name": {
+      "message": "Hunter - Email Finder Extension"
+   },
+   "failed": {
+      "message": "Failed"
+   },
+   "feb": {
+      "message": "Feb"
+   },
+   "february": {
+      "message": "February"
+   },
+   "find_by_name": {
+      "message": "Find by name"
+   },
+   "find_emails_from_websites": {
+      "message": "Find email addresses from websites"
+   },
+   "find_emails_with_email_finder": {
+      "message": "To find the email address of people you have identified, please use the Email Finder."
+   },
+   "find_out_more": {
+      "message": "Find out more information"
+   },
+   "first_name": {
+      "message": "First name"
+   },
+   "first_name_initial": {
+      "message": "First name initial"
+   },
+   "generic": {
+      "message": "Generic"
+   },
+   "go_to_hunter": {
+      "message": "Go to hunter.io"
+   },
+   "go_to_my_leads": {
+      "message": "Go to my leads"
+   },
+   "hunter_extension_is_free": {
+      "message": "Hunter extension is free."
+   },
+   "invalid": {
+      "message": "Invalid"
+   },
+   "jan": {
+      "message": "Jan"
+   },
+   "january": {
+      "message": "January"
+   },
+   "jul": {
+      "message": "Jul"
+   },
+   "july": {
+      "message": "July"
+   },
+   "jun": {
+      "message": "Jun"
+   },
+   "june": {
+      "message": "June"
+   },
+   "last_name": {
+      "message": "Last name"
+   },
+   "last_name_initial": {
+      "message": "Last name initial"
+   },
+   "loading": {
+      "message": "Loading"
+   },
+   "mar": {
+      "message": "Mar"
+   },
+   "march": {
+      "message": "March"
+   },
+   "may": {
+      "message": "May"
+   },
+   "no": {
+      "message": "No"
+   },
+   "no_results_for": {
+      "message": "No results for"
+   },
+   "no_results_found": {
+      "message": "No results found"
+   },
+   "not_available_on_linkedin": {
+      "message": "Hunter is no longer available on LinkedIn"
+   },
+   "not_enough_data": {
+      "message": "Not enough data"
+   },
+   "not_enough_data_for": {
+      "message": "There is not enough data available online for"
+   },
+   "nov": {
+      "message": "Nov"
+   },
+   "november": {
+      "message": "November"
+   },
+   "oct": {
+      "message": "Oct"
+   },
+   "october": {
+      "message": "October"
+   },
+   "open_hunter_on_websites": {
+      "message": "Open Hunter when you visit websites to find email addresses."
+   },
+   "personal": {
+      "message": "Personal"
+   },
+   "please_complete_your_registration": {
+      "message": "Please complete your registration on the \u003Ca target='_blank' href='https://hunter.io/search?utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=browser_popup'>website\u003C/a> to use the extension."
+   },
+   "please_connect_account": {
+      "message": "Please connect your Hunter account to use the extension. It's free."
+   },
+   "please_contact_us_for_feedback": {
+      "message": "Please contact us at contact@hunter.io if you want to give us feedback or ask any question. We would be happy to help."
+   },
+   "please_let_review": {
+      "message": "Please help us spread the word by letting a review!"
+   },
+   "please_sign_in_to_continue": {
+      "message": "Please sign in to continue"
+   },
+   "removed": {
+      "message": "Removed"
+   },
+   "results_for_domain": {
+      "message": "$COUNT$ result$S$ for \u003Cstrong>$DOMAIN$\u003C/strong>",
+      "placeholders": {
+         "count": {
+            "content": "$1",
+            "example": "1,120"
+         },
+         "domain": {
+            "content": "$3",
+            "example": "hunter.io"
+         },
+         "s": {
+            "content": "$2",
+            "example": "s"
+         }
+      }
+   },
+   "retry": {
+      "message": "Retry"
+   },
+   "save": {
+      "message": "Save"
+   },
+   "save_as_lead": {
+      "message": "Save as lead"
+   },
+   "save_leads_in": {
+      "message": "Save leads in"
+   },
+   "saved": {
+      "message": "Saved"
+   },
+   "searches": {
+      "message": "searches"
+   },
+   "see_all_the_results": {
+      "message": "See all the results ($COUNT$ more)",
+      "placeholders": {
+         "count": {
+            "content": "$1",
+            "example": "1,120"
+         }
+      }
+   },
+   "see_results": {
+      "message": "See results on hunter.io"
+   },
+   "sep": {
+      "message": "Sep"
+   },
+   "september": {
+      "message": "September"
+   },
+   "sign_in": {
+      "message": "Sign in"
+   },
+   "sign_up_to_uncover_more_emails": {
+      "message": "Please sign up to uncover the email addresses"
+   },
+   "something_went_wrong_on_our_side": {
+      "message": "Something went wrong on our side. Please try again later."
+   },
+   "something_went_wrong_with_the_query": {
+      "message": "Sorry, something went wrong with the query."
+   },
+   "type": {
+      "message": "Type"
+   },
+   "unknown": {
+      "message": "Unknown"
+   },
+   "upgrade": {
+      "message": "Upgrade"
+   },
+   "valid": {
+      "message": "Valid"
+   },
+   "verify_email": {
+      "message": "Verify email"
+   },
+   "verifying": {
+      "message": "Verifying"
+   },
+   "visit_website_for_information": {
+      "message": "Please visit the website for more information."
+   },
+   "we_are_sorry": {
+      "message": "We are sorry to hear this."
+   },
+   "we_could_not_find_with_filters": {
+      "message": "We couldn't find any results matching your criterias. Update or clear your filters."
+   },
+   "we_found_this_email_on_the_web": {
+      "message": "We found this email address \u003Cstrong>$COUNT$ time$S$\u003C/strong> on the web.",
+      "placeholders": {
+         "count": {
+            "content": "$1",
+            "example": "12"
+         },
+         "s": {
+            "content": "$2",
+            "example": "s"
+         }
+      }
+   },
+   "webmail_domain": {
+      "message": "Webmail domain"
+   },
+   "yes": {
+      "message": "Yes"
+   },
+   "you_are_not_authenticated": {
+      "message": "You are no longer authenticated"
+   },
+   "you_have_reached_your_daily_quota": {
+      "message": "You have reached your free monthly quota. Please \u003Ca target='_blank' href='https://hunter.io/welcome/upgrade?utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=browser_popup'>upgrade\u003C/a> to a premium plan to do more searches."
+   },
+   "you_have_reached_your_temporary_quota": {
+      "message": "You have reached your temporary quota. You will get your full access as soon as we validate your account."
+   },
+   "you_reached_daily_limit": {
+      "message": "You've reached your daily limit!"
+   },
+   "your_account_has_been_restricted": {
+      "message": "Your account has been restricted. Please \u003Ca target='_blank' href='https://hunter.io/search?utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=browser_popup'>log in\u003C/a> for more information."
+   },
+   "your_have_reached_your_monthly_enterprise_quota": {
+      "message": "You have reached your monthly quota. Please contact your account manager to update your plan."
+   },
+   "your_have_reached_your_monthly_quota": {
+      "message": "You have reached your monthly quota. Please \u003Ca target='_blank' href='https://hunter.io/subscriptions?utm_source=chrome_extension&utm_medium=chrome_extension&utm_campaign=extension&utm_content=browser_popup'>upgrade\u003C/a> to do more searches."
+   }
+}
