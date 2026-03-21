@@ -2,138 +2,157 @@ import os, time, re, random
 from playwright.sync_api import sync_playwright
 from supabase import create_client, Client
 
+# ══ CONFIGURATION ══
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_KEY")
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+WORKER_ID = f"Hunter_{random.randint(100, 999)}"
 
-LOCATIONS = [
-    "Mumbai","Delhi","Bangalore","Hyderabad","Chennai","Pune","Kolkata",
-    "Ahmedabad","Jaipur","Surat","Noida","Gurgaon","Indore","Bhopal",
-    "USA","UK","Canada","Australia","Dubai","Singapore","London","New York"
-]
-
-def generate_queries(target_client, city="", count=8):
-    tc = target_client.strip()
-    base = [city, city, city] + random.sample(LOCATIONS, 5) if city else random.sample(LOCATIONS, count)
-    base = list(dict.fromkeys(base))[:count]
-    patterns = [
-        '"{tc}" "{loc}" "@gmail.com"', 'intitle:"{tc}" "{loc}" "contact" "@gmail.com"',
-        '"{tc}" "{loc}" "email" "gmail"', 'intitle:"{tc}" "{loc}" "gmail.com"',
-        '"{tc} owner" "{loc}" "@gmail.com"', '"{tc}" "{loc}" "reach me" "gmail"',
+# Genuine Email Search Queries (Google Dorks)
+def get_advanced_queries(tc, loc):
+    return [
+        f'site:instagram.com "{tc}" "{loc}" "@gmail.com"',
+        f'site:facebook.com "{tc}" "{loc}" "@gmail.com"',
+        f'"{tc}" "{loc}" "contact us" "@gmail.com"',
+        f'"{tc}" "{loc}" "owner" "@gmail.com"',
+        f'"{tc}" "{loc}" "email me at" "@gmail.com"',
+        f'"{tc}" "{loc}" "get a quote" "@gmail.com"'
     ]
-    return [p.format(tc=tc, loc=loc) for p, loc in zip(patterns, base)]
+
+# Strict Validation: Kachra email filter karna
+def validate_strict(email):
+    e = email.lower().strip().rstrip(".")
+    # Junk characters filter
+    if any(x in e for x in ["%", "/", "=", "+", "image", "png", "jpg", "jpeg", "webp"]): 
+        return None
+    # Sirf genuine format allow karna
+    return e if re.match(r"^[a-z0-9._-]+@gmail\.com$", e) else None
 
 def run_hunter():
-    print("🚀 GitHub Hunter Bot Awake! Starting Continuous Hunt...", flush=True)
+    print(f"🚀 {WORKER_ID} Awake! Searching for new missions...", flush=True)
+
+    # 1. 🛑 PREVENT COLLISION: Ek worker sirf EK campaign pakdega
+    # Pehle 'pending' campaigns dekho
+    camp_res = supabase.table("campaigns").select("*").eq("status", "pending").limit(1).execute()
     
-    # 1. Auto-generate tasks from pending campaigns
-    camps = supabase.table("campaigns").select("*").eq("status", "pending").execute()
-    if camps.data:
-        for camp in camps.data:
-            tc = camp.get("target_client") or camp.get("occupation", "business owner")
-            for q in generate_queries(tc, camp.get("city", ""), 6):
-                ex = supabase.table("task_queue").select("id").eq("campaign_id", camp["id"]).eq("query", q).execute()
-                if not ex.data:
-                    supabase.table("task_queue").insert({"campaign_id": camp["id"], "query": q, "status": "pending"}).execute()
-        print("📋 New tasks generated from campaigns!", flush=True)
+    # Agar pending nahi hai, toh check karo koi 'processing' wala campaign jo adhura ho
+    if not camp_res.data:
+        camp_res = supabase.table("campaigns").select("*").eq("status", "processing").limit(1).execute()
+    
+    if not camp_res.data:
+        print("😴 Sab kaam khatam! No pending campaigns found. Node sleeping.", flush=True)
+        return
+
+    camp = camp_res.data[0]
+    camp_id, user_id = camp["id"], camp["user_id"]
+    tc = camp.get("target_client") or camp.get("occupation", "business")
+    city = camp.get("city", "Global")
+    
+    # 2. LOCK CAMPAIGN: Is campaign ko block kardo taaki doosra worker na chhuye
+    supabase.table("campaigns").update({"status": "processing"}).eq("id", camp_id).execute()
+
+    # 3. TASK GENERATION: Is user ke liye search tasks banao (Agar pehle se nahi bane)
+    queries = get_advanced_queries(tc, city)
+    for q in queries:
+        try:
+            supabase.table("task_queue").upsert({
+                "campaign_id": camp_id, 
+                "query": q, 
+                "status": "pending"
+            }, on_conflict="campaign_id,query").execute()
+        except: pass
 
     EXT_PATH = os.path.join(os.getcwd(), "my_extension")
-    ext_ok = os.path.exists(EXT_PATH)
-
+    
     with sync_playwright() as p:
-        args = ["--no-sandbox", "--disable-dev-shm-usage"]
-        if ext_ok:
-            args += [f"--disable-extensions-except={EXT_PATH}", f"--load-extension={EXT_PATH}"]
+        # Browser Launch with optional extension
+        browser_args = ["--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"]
+        if os.path.exists(EXT_PATH):
+            browser_args += [f"--disable-extensions-except={EXT_PATH}", f"--load-extension={EXT_PATH}"]
             
         browser = p.chromium.launch_persistent_context(
-            user_data_dir="./profile_hunter",
+            user_data_dir=f"./profile_{WORKER_ID}",
             headless=True,
-            args=args
+            args=browser_args
         )
-        page = browser.pages[0] if browser.pages else browser.new_page()
-        
-        # 🔄 THE SMART LOOP
+        page = browser.new_page()
+
+        # 🔄 CONTINUOUS HUNTING LOOP
         while True:
-            claimed = supabase.rpc("claim_task", {"worker_name": "GitHub_Hunter"}).execute()
+            # Atomic Claim: 'pending' task ko 'processing' mein badlo
+            claimed = supabase.rpc("claim_task", {"worker_name": WORKER_ID}).execute()
             if not claimed.data:
-                print("ZZZ: No tasks left. Target met or queue empty. Hunter sleeping.", flush=True)
+                print(f"🏁 Is campaign ke saare tasks khatam. Hunter exiting...", flush=True)
                 break
 
             task = claimed.data[0]
-            task_id = task["id"]
-            camp_id = task["campaign_id"]
-            
-            c = supabase.table("campaigns").select("*").eq("id", camp_id).single().execute()
-            if not c.data:
-                supabase.table("task_queue").update({"status": "failed"}).eq("id", task_id).execute()
-                continue
-            camp = c.data
-
-            prof = supabase.table("profiles").select("daily_limit").eq("id", camp["user_id"]).single().execute()
-            target_limit = prof.data.get("daily_limit", 5) if prof.data else 5
-            
-            leads_count_res = supabase.table("leads").select("id", count="exact").eq("campaign_id", camp_id).execute()
-            current_leads = leads_count_res.count if leads_count_res else 0
-
-            if current_leads >= target_limit:
-                print(f"🏆 TARGET COMPLETE for Campaign {camp_id[:8]}! ({current_leads}/{target_limit}). Stopping campaign.", flush=True)
-                supabase.table("campaigns").update({"status": "completed"}).eq("id", camp_id).execute()
-                supabase.table("task_queue").update({"status": "completed"}).eq("campaign_id", camp_id).eq("status", "pending").execute()
-                supabase.table("task_queue").update({"status": "completed"}).eq("id", task_id).execute()
-                continue
-
-            print(f"🎯 HUNTING: {task['query']} | Target Progress: {current_leads}/{target_limit}", flush=True)
-            supabase.table("campaigns").update({"status": "processing"}).eq("id", camp_id).execute()
+            print(f"🎯 TARGET LOCKED: {task['query']}", flush=True)
 
             try:
-                page.goto(f"https://www.google.com/search?q={task['query'].replace(' ', '+')}&num=100", timeout=30000)
-                time.sleep(8)
-                page.mouse.wheel(0, 3000)
-                time.sleep(3)
+                # Search on Google
+                page.goto(f"https://www.google.com/search?q={task['query'].replace(' ', '+')}&num=100", timeout=40000)
+                time.sleep(10)
                 
-                # 🛠️ THE MASTER FIX: Reading visible text instead of raw HTML
-                visible_text = page.inner_text("body")
+                # Step A: Pehle Google ke text se emails nikaalo
+                raw_text = page.inner_text("body")
+                direct_emails = re.findall(r"[a-zA-Z0-9._-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}", raw_text)
                 
-                # Strict Regex without % symbol to avoid grabbing URLs
-                raw_emails = list(set(re.findall(r"[a-zA-Z0-9._-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}", visible_text)))
+                # Step B: Pehle 10-15 Websites ke andar ghuso (Deep Scan)
+                links = page.locator("a").evaluate_all("els => els.map(el => el.href)")
+                target_urls = [l for l in links if "google.com" not in l and l.startswith("http")][:12]
                 
-                # Pre-Filtering on GitHub to save Database load
-                clean_emails = []
-                for e in raw_emails:
-                    e = e.lower().strip().rstrip(".")
-                    if "%" not in e and "/" not in e and "+" not in e and "=" not in e and e.endswith("@gmail.com"):
-                        clean_emails.append(e)
+                found_emails = set()
+                # Direct Google text emails add karo
+                for e in direct_emails:
+                    valid = validate_strict(e)
+                    if valid: found_emails.add(valid)
 
-                print(f"📧 Found {len(clean_emails)} clean emails. Processing...", flush=True)
-
-                inserted_this_round = 0
-                for email in clean_emails:
-                    if current_leads + inserted_this_round >= target_limit:
-                        print(f"🛑 Target of {target_limit} met exactly! Stopping insertion.", flush=True)
-                        break
-                        
+                # Deep Website Scraping
+                for url in target_urls:
                     try:
+                        print(f"  🔍 Deep Scanning Website: {url[:50]}...", flush=True)
+                        new_tab = browser.new_page()
+                        new_tab.goto(url, timeout=15000)
+                        time.sleep(3)
+                        # Page ka asali text uthao
+                        site_text = new_tab.inner_text("body")
+                        site_emails = re.findall(r"[a-zA-Z0-9._-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}", site_text)
+                        for e in site_emails:
+                            valid = validate_strict(e)
+                            if valid: found_emails.add(valid)
+                        new_tab.close()
+                    except:
+                        continue # Website block kare toh next par jao
+
+                # 4. PUSH TO DB: Found emails ko 'raw' status mein save karo
+                pushed_count = 0
+                for email in found_emails:
+                    try:
+                        # campaign_id aur email ka UNIQUE constraint collision bachayega
                         res = supabase.table("leads").insert({
-                            "campaign_id": camp_id, "user_id": camp["user_id"], 
-                            "email": email, "status": "raw"
+                            "campaign_id": camp_id, 
+                            "user_id": user_id, 
+                            "email": email, 
+                            "status": "raw"
                         }).execute()
-                        if res.data:
-                            inserted_this_round += 1
-                    except: pass 
-                    
-                supabase.table("task_queue").update({"status": "completed"}).eq("id", task_id).execute()
+                        if res.data: pushed_count += 1
+                    except: pass # Duplicate skip
                 
-                if current_leads + inserted_this_round >= target_limit:
-                     print(f"🏆 TARGET COMPLETE after this query! Marking campaign as COMPLETED.", flush=True)
-                     supabase.table("campaigns").update({"status": "completed"}).eq("id", camp_id).execute()
-                     supabase.table("task_queue").update({"status": "completed"}).eq("campaign_id", camp_id).eq("status", "pending").execute()
-                     
+                # Task Completed
+                supabase.table("task_queue").update({"status": "completed"}).eq("id", task["id"]).execute()
+                print(f"✅ Mission Success: {pushed_count} genuine emails added to vault.", flush=True)
+
             except Exception as e:
-                print(f"❌ Error: {e}", flush=True)
-                supabase.table("task_queue").update({"status": "failed"}).eq("id", task_id).execute()
-        
-        print("✅ All queues processed. Hunter shutting down.", flush=True)
+                print(f"⚠️ Hunt Failed for this query: {e}", flush=True)
+                supabase.table("task_queue").update({"status": "failed"}).eq("id", task["id"]).execute()
+
         browser.close()
+    
+    # Final Check: Agar campaign ke saare tasks khatam, toh mark as COMPLETED
+    rem_tasks = supabase.table("task_queue").select("id").eq("campaign_id", camp_id).eq("status", "pending").execute()
+    if not rem_tasks.data:
+        supabase.table("campaigns").update({"status": "completed"}).eq("id", camp_id).execute()
+        print(f"🎊 Campaign {camp_id[:8]} fully completed!", flush=True)
 
 if __name__ == "__main__":
     run_hunter()
